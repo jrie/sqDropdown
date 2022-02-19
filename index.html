@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <title>sqDropdown demo</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/sqDropdown.css" >
+    <body>
+        <script type="text/javascript" src="js/sqDropdown.js" defer></script>
+        <label>
+            Single colors:
+            <select class="sqDropdown" data-originid="1" name="singleColor" autocomplete="off">
+                <option value="-1" selected>No color</option>
+                <option value="White">White</option>
+                <option value="Black">Black</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Blue">Blue</option>
+            </select>
+        </label>
+
+        <br>
+
+        <label>
+            Multiple colors:
+            <select class="sqDropdown" multiple data-originid="2" name="multiColor" autocomplete="off">
+                <option value="-1" selected>All colors</option>
+                <option value="White">White</option>
+                <option value="Black">Black</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Blue">Blue</option>
+            </select>
+        </label>
+
+        <br>
+        
+        <label>
+            Single names:
+            <select class="sqDropdown" data-originid="3" name="singleNames" autocomplete="off">
+                <option value="-1">All names</option>
+                <option value="Steve" selected>Steve</option>
+                <option value="John">John</option>
+                <option value="Katherine">Katherine</option>
+                <option value="Jane">Jane</option>
+            </select>
+        </label>
+    </body>
+</html>

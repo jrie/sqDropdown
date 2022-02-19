@@ -1,0 +1,189 @@
+.sqDropDown {
+    font-family: 'sans';
+    font-size: 0.77rem;
+    width: 10em;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    position: relative;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid #6c757d;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    background-color: #6c757d;
+}
+
+.sqDropDown:hover {
+    color: #212529;
+}
+.sqDropDown:focus {
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.5);
+}
+
+.sqDropDown input {
+    text-align: left;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+    margin: 0px;
+    width: calc(100% - 1em);
+    padding: 0.5em 0.75em;
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-delay: 0ms;
+    outline: none;
+}
+
+.sqDropDown input::placeholder,
+.sqDropDown input:hover::placeholder,
+.sqDropDown input:focus::placeholder,
+.sqDropDown input:active::placeholder {
+    color: #fff;
+}
+
+.sqDropDown label {
+    padding: 0px;
+    margin: 0px;
+    display: inline-block;
+    width: inherit;
+}
+
+.sqDropDown input[type="checkbox"] {
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+    min-width: 2em;
+    vertical-align: middle;
+    height: 1.5em;
+    width: 2em;
+}
+
+.sqDropDown .dropDownList {
+    background-color: whitesmoke;
+    overflow-y: scroll;
+    position: absolute;
+    left: -1px;
+    text-align: left;
+    top: 1.8em;
+    max-height: 14em;
+    border-radius: 0px 0px 8px 8px;
+    border: 1px solid #aaa;
+    border-top: 0px;
+    height: 0px;
+    transition-property: height;
+    transition-duration: 700ms;
+    transition-delay: 0ms;
+    z-index: 1;
+    width: inherit;
+    padding: 0px;
+    margin: 0px;
+}
+
+.sqDropDown .dropDownList.hide {
+    height: 0px;
+    border: 0px;
+}
+
+.sqDropDown .dropDownList.show {
+    height: auto;
+    z-index: 99999;
+    max-height: 12rem;
+}
+
+.sqDropDown .dropDownList span {
+    padding: 0.33em 0.75em;
+    display: block;
+    color: whitesmoke;
+    border-bottom: 1px solid lightgrey;
+    width: calc(100% - 2px - 1.5em);
+    color: grey;
+}
+
+.sqDropDown.multipleSelect .dropDownList span {
+    padding: 0px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    width: calc(100% - 2px);
+}
+
+.sqDropDown.multipleSelect .dropDownList label {
+    padding: 0.33em 0.13em;
+    width: calc(100% - 0.66em);
+    cursor: pointer;
+}
+
+.sqDropDown.multipleSelect .dropDownList input {
+    margin: 0px;
+    padding: 0px;
+}
+
+.sqDropDown .dropDownList span:hover,
+.sqDropDown .dropDownList span[selected]:hover,
+.sqDropDown .dropDownList span:focus,
+.sqDropDown .dropDownList label:focus {
+    background-color: slategray;
+    color: whitesmoke;
+}
+
+.sqDropDown .dropDownList span[selected],
+.sqDropDown .dropDownList option[selected] {
+    background-color: lightblue;
+    color: #333;
+}
+
+.sqDropDown .dropDownList span:last-child {
+    border-bottom: 0px;
+}
+
+.sqDropDown.multipleSelect .dropDownList span {
+    padding: 0px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+.sqDropDown.multipleSelect .dropDownList label {
+    padding: 0.33em 0.13em;
+    cursor: pointer;
+}
+
+.sqDropDown.multipleSelect .dropDownList input {
+    margin: 0px;
+    padding: 0px;
+}
+
+.sqDropDown .dropDownList span:hover,
+.sqDropDown .dropDownList span[selected]:hover,
+.sqDropDown .dropDownList span:focus,
+.sqDropDown .dropDownList label:focus {
+    background-color: slategray;
+    color: whitesmoke;
+}
+
+.sqDropDown .dropDownList span[selected],
+.sqDropDown .dropDownList option[selected] {
+    background-color: lightblue;
+    color: #333;
+}
+
+.sqDropDown .dropDownList span:last-child {
+    border-bottom: 0px;
+}
+.sqDropdown.hidden,
+.sqDropDown .dropDownList span.hidden,
+.sqDropdown.multipleSelect .dropDownList span.hidden {
+    visibility: hidden !important;
+}
+
+.sqDropdown.nodisplay,
+.sqDropDown .dropDownList span.nodisplay,
+.sqDropDown.multipleSelect .dropDownList span.nodisplay {
+    display: none !important;
+}
