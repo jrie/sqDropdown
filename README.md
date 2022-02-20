@@ -7,6 +7,10 @@ A simple javascript select box enhancement which provides searching and nicer mu
 * Offers a somehow pleasent view of items
 * Simple setup
 
+### Demo
+
+A live demo can be found [here](https://jrie.github.io/sqDropdown/).
+
 ### Usage
 See `index.html` for details on how to setup the items. Or read on.
 
