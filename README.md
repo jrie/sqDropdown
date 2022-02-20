@@ -12,7 +12,7 @@ See `index.html` for details on how to setup the items. Or read on.
 
 In short, create a `select` element or elements with a base option structure, like you would do normally. You can also use `selected` options.
 
-Add the class `sqDropdown` to the `select` element or elements - also add a unique data attribute `data-originid` with the numbered index of the sqDropdown you want to add. This is required to help the script target the correct dropdown.
+Add the class `sqDropdown` to the `select` element or elements.
 
 Now include the `css` and `js` code which you like to use, either the regular or the minified version. The `index.html` shows the unminified setup. After the css class is added and the script is loaded, the magic will appear.
 
