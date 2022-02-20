@@ -8,7 +8,7 @@ A simple javascript select box enhancement which provides searching and nicer mu
 * Simple setup
 
 ### Usage
-See 'index.html' for details on how to setup the items.  
+See `index.html` for details on how to setup the items. Or read on.
 
 In short, create a `select` element or elements with a base option structure, like you would do normally. You can also use `selected` options.
 
