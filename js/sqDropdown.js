@@ -20,7 +20,7 @@
     target.selectedIndex = parseInt(evt.target.dataset.idx)
     for (const spanChild of target.parentNode.children[target.parentNode.children.length - 1].children[2].children) spanChild.removeAttribute('selected')
     target.parentNode.children[target.parentNode.children.length - 1].children[2].children[target.selectedIndex].setAttribute('selected', 'selected')
-    const event = new Event('change')
+    const event = new window.Event('change')
     target.dispatchEvent(event)
 
     if (target.dataset.nosettitle === undefined) {
@@ -152,7 +152,7 @@
               target.options[index].setAttribute('selected', 'selected')
             }
 
-            const event = new Event('change')
+            const event = new window.Event('change')
             target.dispatchEvent(event)
             evt.target.parentNode.parentNode.parentNode.scrollTo(0, 0)
           })
@@ -212,7 +212,7 @@
               options[0].parentNode.parentNode.setAttribute('selected', 'selected')
             }
 
-            const event = new Event('change')
+            const event = new window.Event('change')
             target.dispatchEvent(event)
             evt.target.parentNode.parentNode.parentNode.scrollTo(0, originalOffset - 60)
           })
@@ -292,7 +292,8 @@
     input.addEventListener('focus', function () {
       toggleDropdown(input, itemContainer)
     })
-    input.addEventListener('keyup', function () {
+    input.addEventListener('keyup', function (evt) {
+      console.log(evt)
       searchValue(input, itemContainer)
     })
 
