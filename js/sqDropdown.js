@@ -1,5 +1,5 @@
 (function () {
-  const dropDowns = document.querySelectorAll('select')
+  const dropDowns = document.querySelectorAll('select.sqDropdown')
 
   function toggleDropdown (input, container) {
     container.classList.remove('hide')
@@ -14,16 +14,14 @@
 
   function setSelectValue (evt) {
     let target = null
-    if (evt.target.dataset.targetid.startsWith('#', 0)) {
-      target = document.querySelector(evt.target.dataset.targetid)
-    } else {
-      target = document.querySelector('select[data-targetindex="' + evt.target.dataset.targetindex + '"]')
-    }
+    if (evt.target.dataset.targetid.startsWith('#', 0)) target = document.querySelector(evt.target.dataset.targetid)
+    else target = document.querySelector('select[data-targetindex="' + evt.target.dataset.targetindex + '"]')
 
     target.selectedIndex = parseInt(evt.target.dataset.idx)
-    for (const spanChild of target.parentNode.children[0].children[2].children) spanChild.removeAttribute('selected')
-    target.parentNode.children[0].children[2].children[target.selectedIndex].setAttribute('selected', 'selected')
-    target.dispatchEvent(new window.Event('change'))
+    for (const spanChild of target.parentNode.children[target.parentNode.children.length - 1].children[2].children) spanChild.removeAttribute('selected')
+    target.parentNode.children[target.parentNode.children.length - 1].children[2].children[target.selectedIndex].setAttribute('selected', 'selected')
+    const event = new Event('change')
+    target.dispatchEvent(event)
 
     if (target.dataset.nosettitle === undefined) {
       for (const child of evt.target.parentNode.parentNode.children) {
@@ -33,9 +31,18 @@
   }
 
   function isInTargetNode (startNode, targetNode, limit) {
-    if (limit-- === 0) return false
-    if (startNode === null) return false
-    if (startNode === targetNode) return true
+    if (limit-- === 0) {
+      return false
+    }
+
+    if (startNode === null) {
+      return false
+    }
+
+    if (startNode === targetNode) {
+      return true
+    }
+
     return isInTargetNode(startNode.parentNode, targetNode, limit)
   }
 
@@ -77,10 +84,7 @@
 
     const container = document.createElement('div')
 
-    container.classList.add('btn')
-    container.classList.add('btn-secondary')
-    container.classList.add('dropDown')
-    container.classList.add('input-group-text')
+    container.classList.add('sqDropDown')
     container.style.zIndex = zIndex
 
     item.dataset.targetindex = targetIndex
@@ -92,13 +96,17 @@
     const multiple = item.getAttribute('multiple')
     if (multiple !== null) {
       container.classList.add('multipleSelect')
-      if (item.getAttribute('name') !== null) item.setAttribute('name', item.getAttribute('name').replace(/[\[\]]/g, '') + '[]')
+      if (item.getAttribute('name') !== null) {
+        item.setAttribute('name', item.getAttribute('name').replace(/[\[\]]/g, '') + '[]')
+      }
     }
 
     let optionIndex = 0
     for (const option of item.children) {
       const dropDownItem = document.createElement('span')
-      for (const attribute of option.getAttributeNames()) dropDownItem.setAttribute(attribute, option.getAttribute(attribute))
+      for (const attribute of option.getAttributeNames()) {
+        dropDownItem.setAttribute(attribute, option.getAttribute(attribute))
+      }
 
       if (multiple !== null) {
         const label = document.createElement('label')
@@ -133,11 +141,8 @@
               }
             }
 
-            if (subTarget.dataset.targetid.startsWith('#', 0)) {
-              target = document.querySelector(subTarget.dataset.targetid)
-            } else {
-              target = document.querySelector('select[data-targetindex="' + subTarget.dataset.targetindex + '"]')
-            }
+            if (subTarget.dataset.targetid.startsWith('#', 0)) target = document.querySelector(subTarget.dataset.targetid)
+            else target = document.querySelector('select[data-targetindex="' + subTarget.dataset.targetindex + '"]')
 
             for (const option of target.options) {
               option.removeAttribute('selected')
@@ -147,7 +152,8 @@
               target.options[index].setAttribute('selected', 'selected')
             }
 
-            target.dispatchEvent(new Event('change'))
+            const event = new Event('change')
+            target.dispatchEvent(event)
             evt.target.parentNode.parentNode.parentNode.scrollTo(0, 0)
           })
         } else {
@@ -204,8 +210,8 @@
               options[0].parentNode.parentNode.setAttribute('selected', 'selected')
             }
 
-            target.dispatchEvent(new window.Event('change'))
-            target.focus()
+            const event = new Event('change')
+            target.dispatchEvent(event)
           })
         }
 
@@ -273,14 +279,12 @@
         dropDownItem.dataset.targetid = targetIndex
       }
 
-      if (multiple === null) dropDownItem.addEventListener('click', setSelectValue)
+      if (multiple === null) {
+        dropDownItem.addEventListener('click', setSelectValue)
+      }
     }
 
     const icon = document.createElement('span')
-    icon.classList.add('fas')
-    // icon.classList.add('fa-caret-down')
-    icon.classList.add('fa-align-justify')
-
     const input = document.createElement('input')
     for (const attribute of item.getAttributeNames()) {
       if (attribute === 'name') {
@@ -298,8 +302,11 @@
     input.classList.remove('dropdown')
 
     if (item.selectedOptions.length !== 0) {
-      if (item.selectedOptions.length !== 0) input.setAttribute('placeholder', item.selectedOptions[0].innerText)
-      else input.setAttribute('placeholder', item.options[0].innerText)
+      if (item.selectedOptions.length !== 0) {
+        input.setAttribute('placeholder', item.selectedOptions[0].innerText)
+      } else {
+        input.setAttribute('placeholder', item.options[0].innerText)
+      }
       input.value = ''
     } else {
       input.value = ''
@@ -309,12 +316,10 @@
     itemContainer.setAttribute('tabindex', '-1')
     input.setAttribute('tabindex', '0')
 
-    // input.addEventListener('blur', function () { forceMouseOut(input, itemContainer) }) // TODO: Readd on new Opera and Firefox versions
     input.addEventListener('focus', function () {
       toggleDropdown(input, itemContainer)
     })
-
-    input.addEventListener('keyup', function (evt) {
+    input.addEventListener('keyup', function () {
       searchValue(input, itemContainer)
     })
 
@@ -342,7 +347,7 @@
     container.appendChild(input)
     container.appendChild(itemContainer)
 
-    item.parentNode.prepend(container)
+    item.parentNode.append(container)
     item.classList.add('hidden')
     item.classList.add('nodisplay')
     targetIndex++
