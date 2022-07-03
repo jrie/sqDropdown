@@ -1,5 +1,5 @@
 (function () {
-  const dropDowns = document.querySelectorAll('select.sqDropdown')
+  const dropDowns = document.querySelectorAll('select')
 
   function toggleDropdown (input, container) {
     container.classList.remove('hide')
@@ -14,14 +14,16 @@
 
   function setSelectValue (evt) {
     let target = null
-    if (evt.target.dataset.targetid.startsWith('#', 0)) target = document.querySelector(evt.target.dataset.targetid)
-    else target = document.querySelector('select[data-targetindex="' + evt.target.dataset.targetindex + '"]')
+    if (evt.target.dataset.targetid.startsWith('#', 0)) {
+      target = document.querySelector(evt.target.dataset.targetid)
+    } else {
+      target = document.querySelector('select[data-targetindex="' + evt.target.dataset.targetindex + '"]')
+    }
 
     target.selectedIndex = parseInt(evt.target.dataset.idx)
-    for (const spanChild of target.parentNode.children[target.parentNode.children.length - 1].children[2].children) spanChild.removeAttribute('selected')
-    target.parentNode.children[target.parentNode.children.length - 1].children[2].children[target.selectedIndex].setAttribute('selected', 'selected')
-    const event = new window.Event('change')
-    target.dispatchEvent(event)
+    for (const spanChild of target.parentNode.children[0].children[2].children) spanChild.removeAttribute('selected')
+    target.parentNode.children[0].children[2].children[target.selectedIndex].setAttribute('selected', 'selected')
+    target.dispatchEvent(new window.Event('change'))
 
     if (target.dataset.nosettitle === undefined) {
       for (const child of evt.target.parentNode.parentNode.children) {
@@ -31,18 +33,9 @@
   }
 
   function isInTargetNode (startNode, targetNode, limit) {
-    if (limit-- === 0) {
-      return false
-    }
-
-    if (startNode === null) {
-      return false
-    }
-
-    if (startNode === targetNode) {
-      return true
-    }
-
+    if (limit-- === 0) return false
+    if (startNode === null) return false
+    if (startNode === targetNode) return true
     return isInTargetNode(startNode.parentNode, targetNode, limit)
   }
 
@@ -84,7 +77,10 @@
 
     const container = document.createElement('div')
 
-    container.classList.add('sqDropDown')
+    container.classList.add('btn')
+    container.classList.add('btn-secondary')
+    container.classList.add('dropDown')
+    container.classList.add('input-group-text')
     container.style.zIndex = zIndex
 
     item.dataset.targetindex = targetIndex
@@ -96,17 +92,13 @@
     const multiple = item.getAttribute('multiple')
     if (multiple !== null) {
       container.classList.add('multipleSelect')
-      if (item.getAttribute('name') !== null) {
-        item.setAttribute('name', item.getAttribute('name').replace(/[\[\]]/g, '') + '[]')
-      }
+      if (item.getAttribute('name') !== null) item.setAttribute('name', item.getAttribute('name').replace(/[\[\]]/g, '') + '[]')
     }
 
     let optionIndex = 0
     for (const option of item.children) {
       const dropDownItem = document.createElement('span')
-      for (const attribute of option.getAttributeNames()) {
-        dropDownItem.setAttribute(attribute, option.getAttribute(attribute))
-      }
+      for (const attribute of option.getAttributeNames()) dropDownItem.setAttribute(attribute, option.getAttribute(attribute))
 
       if (multiple !== null) {
         const label = document.createElement('label')
@@ -141,8 +133,11 @@
               }
             }
 
-            if (subTarget.dataset.targetid.startsWith('#', 0)) target = document.querySelector(subTarget.dataset.targetid)
-            else target = document.querySelector('select[data-targetindex="' + subTarget.dataset.targetindex + '"]')
+            if (subTarget.dataset.targetid.startsWith('#', 0)) {
+              target = document.querySelector(subTarget.dataset.targetid)
+            } else {
+              target = document.querySelector('select[data-targetindex="' + subTarget.dataset.targetindex + '"]')
+            }
 
             for (const option of target.options) {
               option.removeAttribute('selected')
@@ -152,8 +147,7 @@
               target.options[index].setAttribute('selected', 'selected')
             }
 
-            const event = new window.Event('change')
-            target.dispatchEvent(event)
+            target.dispatchEvent(new Event('change'))
             evt.target.parentNode.parentNode.parentNode.scrollTo(0, 0)
           })
         } else {
@@ -172,8 +166,6 @@
                 }
               }
             }
-
-            const originalOffset = evt.layerY
 
             const subTarget = evt.target.parentNode.parentNode
             const selected = []
@@ -212,37 +204,66 @@
               options[0].parentNode.parentNode.setAttribute('selected', 'selected')
             }
 
-            const event = new window.Event('change')
-            target.dispatchEvent(event)
-            evt.target.parentNode.parentNode.parentNode.scrollTo(0, originalOffset - 60)
+            target.dispatchEvent(new window.Event('change'))
+            target.focus()
           })
         }
 
-        label.addEventListener('focus', function () { toggleDropdown(input, itemContainer) })
-        label.addEventListener('blur', function () { forceMouseOut(input, itemContainer) })
         label.addEventListener('keypress', function (evt) {
-          if (evt.keyCode === 13 || evt.charCode === 32) {
-            evt.target.children[0].click()
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault()
+            evt.target.click()
+            evt.target.focus()
           }
         })
 
         label.setAttribute('tabindex', '0')
         dropDownItem.setAttribute('tabindex', '-1')
         dropDownItem.appendChild(label)
+
+        dropDownItem.addEventListener('keydown', function (evt) {
+          if (evt.key === 'ArrowUp' && evt.target.parentNode.previousSibling !== null) {
+            evt.preventDefault()
+            evt.target.parentNode.previousSibling.children[0].focus()
+            evt.target.parentNode.parentNode.scrollBy(0, -evt.target.parentNode.clientHeight)
+          } else if (evt.key === 'ArrowDown' && evt.target.parentNode.nextSibling !== null) {
+            evt.preventDefault()
+            evt.target.parentNode.nextSibling.children[0].focus()
+          }
+        })
       } else {
         dropDownItem.appendChild(document.createTextNode(option.innerText))
 
         dropDownItem.setAttribute('tabindex', '0')
-        dropDownItem.addEventListener('keypress', function (evt) {
-          if (evt.keyCode === 13 || evt.charCode === 32) {
+        dropDownItem.addEventListener('keydown', function (evt) {
+          if (evt.key === 'ArrowUp' && evt.target.previousSibling !== null) {
+            evt.target.previousSibling.focus()
+          } else if (evt.key === 'ArrowDown' && evt.target.nextSibling !== null) {
+            evt.target.nextSibling.focus()
+          }
+        })
+
+        dropDownItem.addEventListener('keyup', function (evt) {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.stopPropagation()
             evt.target.click()
           }
         })
       }
 
-      dropDownItem.addEventListener('focus', function () { toggleDropdown(input, itemContainer) })
-      dropDownItem.addEventListener('blur', function () { forceMouseOut(input, itemContainer) })
-      dropDownItem.addEventListener('click', function () { toggleDropdown(input, itemContainer) })
+      dropDownItem.addEventListener('focus', function () {
+        toggleDropdown(input, itemContainer)
+      })
+
+      dropDownItem.addEventListener('blur', function () {
+        forceMouseOut(input, itemContainer)
+      })
+
+      dropDownItem.addEventListener('click', function (evt) {
+        evt.stopPropagation()
+        toggleDropdown(input, itemContainer)
+      })
+
       itemContainer.appendChild(dropDownItem)
       dropDownItem.dataset.idx = optionIndex++
       dropDownItem.dataset.targetindex = targetIndex
@@ -252,12 +273,14 @@
         dropDownItem.dataset.targetid = targetIndex
       }
 
-      if (multiple === null) {
-        dropDownItem.addEventListener('click', setSelectValue)
-      }
+      if (multiple === null) dropDownItem.addEventListener('click', setSelectValue)
     }
 
     const icon = document.createElement('span')
+    icon.classList.add('fas')
+    // icon.classList.add('fa-caret-down')
+    icon.classList.add('fa-align-justify')
+
     const input = document.createElement('input')
     for (const attribute of item.getAttributeNames()) {
       if (attribute === 'name') {
@@ -275,11 +298,8 @@
     input.classList.remove('dropdown')
 
     if (item.selectedOptions.length !== 0) {
-      if (item.selectedOptions.length !== 0) {
-        input.setAttribute('placeholder', item.selectedOptions[0].innerText)
-      } else {
-        input.setAttribute('placeholder', item.options[0].innerText)
-      }
+      if (item.selectedOptions.length !== 0) input.setAttribute('placeholder', item.selectedOptions[0].innerText)
+      else input.setAttribute('placeholder', item.options[0].innerText)
       input.value = ''
     } else {
       input.value = ''
@@ -289,11 +309,12 @@
     itemContainer.setAttribute('tabindex', '-1')
     input.setAttribute('tabindex', '0')
 
+    // input.addEventListener('blur', function () { forceMouseOut(input, itemContainer) }) // TODO: Readd on new Opera and Firefox versions
     input.addEventListener('focus', function () {
       toggleDropdown(input, itemContainer)
     })
+
     input.addEventListener('keyup', function (evt) {
-      console.log(evt)
       searchValue(input, itemContainer)
     })
 
@@ -321,7 +342,7 @@
     container.appendChild(input)
     container.appendChild(itemContainer)
 
-    item.parentNode.append(container)
+    item.parentNode.prepend(container)
     item.classList.add('hidden')
     item.classList.add('nodisplay')
     targetIndex++
